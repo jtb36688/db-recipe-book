@@ -7,6 +7,9 @@ exports.up = function(knex, Promise) {
     .createTable("recipes", column => {
       column.increments();
       column.string("name", 100).notNullable();
+      column.integer("dish_id").unsigned()
+      .references("id").inTable("dishes")
+      .onDelete("CASCADE").onUpdate("CASCADE")
     })
     .createTable("ingredients", column => {
         column.increments();
