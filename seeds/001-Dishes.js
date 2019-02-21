@@ -5,7 +5,7 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('table_name').insert([
-        {Name: "Pancakes"},
+        {name: "Pancakes"},
         {name: "Fried Chicken"},
         {name: "Stir-Fry"}
       ]);

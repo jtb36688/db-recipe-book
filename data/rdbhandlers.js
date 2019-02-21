@@ -5,6 +5,7 @@ const db = knex(knexConfig.development);
 module.exports = {
   addDish,
   getDishes,
+  getDishRecipes,
   removeDish,
   modifyDish,
   addRecipe
@@ -23,12 +24,18 @@ function getDishes(id) {
       let [dish, recipe] = results;
       if (dish) {
         dish.recipe = recipe;
-        return this.mapToBody(dish);
+        return dishToBody(dish);
       } else {
         return null;
       }
     });
   }
+}
+
+function getDishRecipes(id) {
+  return db("recipies")
+    .where("dish_id", id)
+    .then(recipes => recipes.map(recipe => recipeToBody(recipe)));
 }
 
 function removeDish(id) {
@@ -48,4 +55,24 @@ async function modifyDish(id, request) {
   }
 }
 
-function addRecipe(recipe) {}
+function addRecipe(request) {
+    return db("recipes").insert(request)
+}
+
+function dishToBody(dish) {
+  const result = {
+    ...dish
+  };
+  if (dish.recipes) {
+    result.recipes = dish.recipes.map(recipe => ({
+      ...recipe
+    }));
+  }
+  return result;
+}
+
+function recipeToBody(recipe) {
+  return {
+    ...recipe
+  };
+}

@@ -5,12 +5,12 @@ exports.seed = function(knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex('table_name').insert([
-        {name: 'PeanutButter Pancakes'},
-        {name: 'CreamCheese Pancakes'},
-        {name: 'DeepFried Chicken'},
-        {name: 'PanFried Chicken'},
-        {name: 'Vegetable Stir-Fry'},
-        {name: 'Chicken Stir-Fry'},
+        {name: 'PeanutButter Pancakes', dish_id: 1},
+        {name: 'CreamCheese Pancakes', dish_id: 1},
+        {name: 'DeepFried Chicken', dish_id: 2},
+        {name: 'PanFried Chicken', dish_id: 2},
+        {name: 'Vegetable Stir-Fry', dish_id: 3},
+        {name: 'Chicken Stir-Fry', dish_id: 3}
       ]);
     });
 };
