@@ -25,7 +25,7 @@ server.post("/api/dishes", (req, res) => {
 });
 
 server.get("/api/dishes", (req, res) => {
-  db.getDish()
+  db.getDishes()
     .then(found => {
       res.status(200).json(found);
     })
@@ -36,7 +36,7 @@ server.get("/api/dishes", (req, res) => {
 
 server.get("/api/dishes/:id", (req, res) => {
   const { id } = req.params;
-  db.getDish(id)
+  db.getDishes(id)
     .then(found => {
       if (found) {
         res.status(200).json(found);
@@ -93,12 +93,12 @@ server.put("/api/dishes/:id", (req, res) => {
 });
 
 server.post("/api/recipes/", (req, res) => {
-  const { name } = req.body;
-  const addition = { name };
-  if (!name) {
+  const { name, dish_id } = req.body;
+  const addition = { name, dish_id };
+  if (!name || !dish_id ) {
     return res
       .status(400)
-      .json({ error: "Please provide a name for your addition" });
+      .json({ error: "Please provide a name and dish_id for your addition" });
   }
   db.addRecipe(addition)
     .then(add => {

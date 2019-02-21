@@ -21,19 +21,22 @@ function getDishes(id) {
   if (id && id > 0) {
     query.where("id", id).first();
     return Promise.all([query, this.getDishRecipes(id)]).then(results => {
-      let [dish, recipe] = results;
+      let [dish, recipes] = results;
       if (dish) {
-        dish.recipe = recipe;
+        dish.recipes = recipes;
         return dishToBody(dish);
       } else {
         return null;
       }
     });
   }
+  return query.then(dishes => {
+      return dishes.map(dish => dishToBody(dish))
+  })
 }
 
 function getDishRecipes(id) {
-  return db("recipies")
+  return db("recipes")
     .where("dish_id", id)
     .then(recipes => recipes.map(recipe => recipeToBody(recipe)));
 }
