@@ -92,6 +92,33 @@ server.put("/api/dishes/:id", (req, res) => {
     });
 });
 
+server.get("/api/recipes", (req, res) => {
+  db.getRecipe()
+    .then(found => {
+      res.status(200).json(found);
+    })
+    .catch(({ code, message }) => {
+      res.status(code).json({ message });
+    });
+});
+
+server.get("/api/recipes/:id", (req, res) => {
+  const { id } = req.params;
+  db.getRecipe(id)
+  .then(found => {
+    if (found) {
+      res.status(200).json(found);
+    } else {
+      res.status(404).json({
+        error: "Unable to find any entries matching ID"
+      });
+    }
+  })
+  .catch(({ code, message }) => {
+    res.status(code).json({ message });
+  });
+});
+
 server.post("/api/recipes/", (req, res) => {
   const { name, dish_id } = req.body;
   const addition = { name, dish_id };

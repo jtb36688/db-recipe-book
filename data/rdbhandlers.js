@@ -8,7 +8,8 @@ module.exports = {
   getDishRecipes,
   removeDish,
   modifyDish,
-  addRecipe
+  addRecipe,
+  getRecipe
 };
 
 function addDish(request) {
@@ -30,9 +31,31 @@ function getDishes(id) {
       }
     });
   }
-  return query.then(dishes => {
-      return dishes.map(dish => dishToBody(dish))
-  })
+  return query;
+}
+
+function getRecipe(id) {
+  let query = db("recipes");
+
+  if (id && id > 0) {
+    query.where("id", id).first();
+    return Promise.all([query, getRecipeIngredients(id)]).then(results => {
+      let [recipe, ingredients] = results;
+      if (recipe) {
+        recipe.ingredients = ingredients;
+        return recipe.ingredients;
+      } else {
+        return null;
+      }
+    })
+  }
+  return query
+}
+
+function getRecipeIngredients(id) {
+  return db("ingredients")
+  .where("recipe_id", id)
+  .join("recipe_ingredients", 'recipe_ingredients.ingredients_id', '=', 'ingredients.id')
 }
 
 function getDishRecipes(id) {
@@ -40,6 +63,8 @@ function getDishRecipes(id) {
     .where("dish_id", id)
     .then(recipes => recipes.map(recipe => recipeToBody(recipe)));
 }
+
+
 
 function removeDish(id) {
   return db("dishes")
