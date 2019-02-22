@@ -43,7 +43,7 @@ function getRecipe(id) {
       let [recipe, ingredients] = results;
       if (recipe) {
         recipe.ingredients = ingredients;
-        return recipe.ingredients;
+        return recipeToBody(recipe);
       } else {
         return null;
       }
@@ -54,7 +54,8 @@ function getRecipe(id) {
 
 function getRecipeIngredients(id) {
   return db("ingredients")
-  .where("recipe_id", id)
+  .select('ingredients.quantity', 'ingredients.name')
+  .where("recipes_id", id)
   .join("recipe_ingredients", 'recipe_ingredients.ingredients_id', '=', 'ingredients.id')
 }
 
@@ -100,7 +101,13 @@ function dishToBody(dish) {
 }
 
 function recipeToBody(recipe) {
-  return {
+  const result = {
     ...recipe
   };
+  if (recipe.ingredients) {
+    result.ingredients = recipe.ingredients.map(ingredient => ({
+      ...ingredient
+    }));
+  }
+  return result;
 }
